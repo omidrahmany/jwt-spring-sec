@@ -58,6 +58,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .claim("rol", roles)
                 .compact();
 
+//        response.addHeader("Access-Control-Allow-Headers"," Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Custom-header");
+        /*response.addHeader("Access-Control-Expose-Headers"," My-Fucking-Header, Another-Header ".concat(SecurityConstant.TOKEN_HEADER) );
+        response.addHeader("My-Fucking-Header", "XXXXXXXXXXYYYYYYYYYYYYYYY");
+        response.addHeader("Another-Header", "OOOOOOOOOOOOOOOOOOOOPS");*/
         response.addHeader(SecurityConstant.TOKEN_HEADER, SecurityConstant.TOKEN_PREFIX.concat(token));
     }
 }
