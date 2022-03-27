@@ -1,5 +1,5 @@
 <div class="col-md-6">
-  <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+  <form *ngIf="!isLoadingMode" #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
     <div class="form-group mt-4">
       <label for="username">Username</label>
       <input class="form-control" id="username" name="username" ngModel required type="text">
@@ -10,7 +10,8 @@
       <input class="form-control" id="password" minlength="5" name="password" ngModel required type="password">
     </div>
     <div class="mt-3">
-      <button class="btn btn-primary" [disabled]="authForm.invalid" type="submit">{{isLoginMode ? 'Login' : 'Sign Up'}}</button>
+      <button class="btn btn-primary" [disabled]="authForm.invalid"
+              type="submit">{{isLoginMode ? 'Login' : 'Sign Up'}}</button>
       |
       <button class="btn btn-secondary"
               type="button"
@@ -18,4 +19,7 @@
     </div
     >
   </form>
+  <div *ngIf="isLoadingMode" style="text-align: center">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
 </div>

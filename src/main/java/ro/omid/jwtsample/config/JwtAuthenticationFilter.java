@@ -40,7 +40,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                            FilterChain chain, Authentication authResult) {
         User user = (User) authResult.getPrincipal();
         List<String> roles = user.getAuthorities()
                 .stream()
@@ -58,10 +59,29 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .claim("rol", roles)
                 .compact();
 
-//        response.addHeader("Access-Control-Allow-Headers"," Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Custom-header");
-        /*response.addHeader("Access-Control-Expose-Headers"," My-Fucking-Header, Another-Header ".concat(SecurityConstant.TOKEN_HEADER) );
-        response.addHeader("My-Fucking-Header", "XXXXXXXXXXYYYYYYYYYYYYYYY");
-        response.addHeader("Another-Header", "OOOOOOOOOOOOOOOOOOOOPS");*/
-        response.addHeader(SecurityConstant.TOKEN_HEADER, SecurityConstant.TOKEN_PREFIX.concat(token));
+
+        response.addHeader("authorization", "Bearer ".concat(token));
+        response.addHeader("param1", "XXXXXXXX");
+        response.addHeader("param2", "YYYYYYYY");
     }
 }
+
+
+
+/*
+        response.addHeader("Access-Control-Expose-Headers","authorization, param1, param2");
+
+        response.addHeader("authorization", "Bearer ".concat(token));
+        response.addHeader("param1", "XXXXXXXX");
+        response.addHeader("param2", "YYYYYYYY");
+*/
+
+//        response.addHeader("Access-Control-Allow-Headers"," Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Custom-header");
+
+
+
+
+
+/*response.addHeader("Access-Control-Expose-Headers"," My-Fucking-Header, Another-Header, ".concat(SecurityConstant.TOKEN_HEADER) );
+        response.addHeader("My-Fucking-Header", "XXXXXXXXXXYYYYYYYYYYYYYYY");
+        response.addHeader("Another-Header", "OOOOOOOOOOOOOOOOOOOOPS");*/

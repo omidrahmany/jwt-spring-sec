@@ -31,12 +31,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private List<String> allowedOrigins;
 
     @PostConstruct
-    public void postConstruct(){
+    public void postConstruct() {
         allowedOrigins = new ArrayList<>();
         allowedOrigins = Arrays.asList(this.crossOriginDomain.split(","));
     }
 
-    // Default Password
     private static final String DEFAULT_PASSWORD = new
             BCryptPasswordEncoder().encode("test@123");
 
@@ -52,13 +51,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtAuthorizationFilter(authenticationManager()))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
     }
 
     @Autowired
-    protected void configureGlobal(AuthenticationManagerBuilder auth) throws
-            Exception {
-// add our users for in memory authentication
+    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("omid").password(DEFAULT_PASSWORD).roles("ADMIN")
                 .and()
@@ -76,26 +72,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
 
-        /** All domains which are allowed to send request to here */
+        /** All domains which are allowed to send request to here, server side. */
         configuration.setAllowedOrigins(allowedOrigins);
 
         configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
 
         /**
          * setAllowCredentials(true) is important, otherwise:
-           The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the
-         request's credentials mode is 'include'.*/
+         * The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the
+         * request's credentials mode is 'include'. */
         configuration.setAllowCredentials(true);
 
-
-         /** setAllowedHeaders is important! Without it, OPTIONS preflight request
-            will fail with 403 Invalid CORS request*/
+        /** setAllowedHeaders is important! Without it, OPTIONS preflight request
+         will fail with 403 Invalid CORS request*/
         configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
 
-        /** allow header "SecurityConstant.TOKEN_HEADER" to be read by clients to enable them to read
-         *  the location of an uploaded group logo*/
+        /** allow header "SecurityConstant.TOKEN_HEADER" to be read by clients */
         configuration.addExposedHeader(SecurityConstant.TOKEN_HEADER);
-
 
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

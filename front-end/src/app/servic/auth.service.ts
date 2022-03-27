@@ -1,15 +1,25 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {ThisReceiver} from "@angular/compiler";
+import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
+import {sendMessageToMaster} from "@angular/compiler-cli/ngcc/src/execution/cluster/utils";
+import {stringify} from "@angular/compiler/src/util";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  secureToken: string = '';
-
   constructor(private http: HttpClient) {
+    this._secureToken = '';
+  }
+
+  private _secureToken: string;
+
+  get secureToken(): string {
+    return this._secureToken;
+  }
+
+  set secureToken(value: string) {
+    this._secureToken = value;
   }
 
   login(data: { username: string, password: string }) {
@@ -17,30 +27,21 @@ export class AuthService {
     searchParams = searchParams
       .append("username", data.username)
       .append("password", data.password);
-    this.http.get('http://localhost:8080/api/authenticate', {
+    return this.http.get('http://localhost:8080/api/authenticate', {
       params: searchParams,
       observe: 'response'
     })
-      .subscribe({
-        next: value => {
+  }
 
-
-
-
-          console.log("response: ");
-          console.log(value);
-          if (value.headers.get('authorization') !== null) {
-            // @ts-ignore
-            // this.secureToken = value.headers.headers.get('authorization').replace('Bearer ', '');
-            console.log(value.headers.get('authorization'));
-
-
-          }
-          console.log('my token: '.concat(this.secureToken));
-          console.log('headers: ');
-          console.log(value.headers);
-        }
-      })
+  showPrivateContent() {
+    let authorizationParam = new HttpParams();
+    authorizationParam = authorizationParam.append("authorization", this.secureToken);
+    return this.http.get('http://localhost:8080/api/private', {
+      observe: 'response',
+      headers: {
+        authorization: this.secureToken
+      }
+    })
   }
 
 

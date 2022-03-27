@@ -11,6 +11,7 @@ import { HomeComponent } from './home/home.component';
 import { PrivateZoneComponent } from './private-zone/private-zone.component';
 import { PublicZoneComponent } from './public-zone/public-zone.component';
 import {HttpClientModule} from "@angular/common/http";
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import {HttpClientModule} from "@angular/common/http";
     NavbarComponent,
     HomeComponent,
     PrivateZoneComponent,
-    PublicZoneComponent
+    PublicZoneComponent,
+    LoadingSpinnerComponent
   ],
   imports: [
     BrowserModule, FormsModule, AppRoutingModule, HttpClientModule
