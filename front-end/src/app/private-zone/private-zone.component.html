@@ -5,18 +5,18 @@
     </div>
   </div>
   <hr>
-  <div *ngIf="isErrMode">
-    <p class="alert alert-danger">{{errorObj.message}}</p>
+  <div *ngIf="isErrMode && !isAllowedToShowPrivateContent">
+    <p class="alert alert-danger">{{errMsg.concat(" Mode!")}}</p>
     <strong class="alert alert-danger mt-4">You need to log in!</strong>
   </div>
 
-  <div *ngIf="isAllowedToShowPrivateContent" class="row">
+  <div *ngIf="isAllowedToShowPrivateContent && !isErrMode" class="row">
     <div class="col-md-6">
       <h1>this is private zone</h1>
       <p class="alert alert-success mt-3">Congratulations!</p>
       <p class="alert alert-primary mt-3">you must have logged in!</p>
       <hr>
-      <p class="alert alert-info">here is your result: {{ response.body.result}}</p>
+      <p class="alert alert-info">here is your result: {{ responseObj.body.result}}</p>
     </div>
   </div>
 </div>

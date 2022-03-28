@@ -89,9 +89,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         /** allow header "SecurityConstant.TOKEN_HEADER" to be read by clients */
         configuration.addExposedHeader(SecurityConstant.TOKEN_HEADER);
+        configuration.addExposedHeader("Exception-Code");
 
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", configuration.applyPermitDefaultValues());
 
         return source;
     }

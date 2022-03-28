@@ -3,6 +3,7 @@ package ro.omid.jwtsample.config;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,6 +11,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.util.ObjectUtils;
+import ro.omid.jwtsample.enums.ExceptionCodeEnum;
+import ro.omid.jwtsample.exception.UnauthenticatedException;
+import ro.omid.jwtsample.util.ExceptionModel;
 import ro.omid.jwtsample.util.SecurityConstant;
 
 import javax.servlet.FilterChain;
@@ -32,18 +36,25 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        Authentication authentication = getAuthentication(request);
-        if (Objects.isNull(authentication)) {
+        try {
+            Authentication authentication = getAuthentication(request, response);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             chain.doFilter(request, response);
+        } catch (UnauthenticatedException exception) {
+            exception.printStackTrace();
+            response.addHeader("Exception-Code", ExceptionCodeEnum.UNAUTHENTICATED.toString());
+//            chain.doFilter(request, response);
             return;
         }
+        /*if (Objects.isNull(authentication)) {
+            chain.doFilter(request, response);
+            return;
+        }*/
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        chain.doFilter(request, response);
 
     }
 
-    public Authentication getAuthentication(HttpServletRequest request) {
+    public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response) {
 
         String token = request.getHeader(SecurityConstant.TOKEN_HEADER);
         if (!ObjectUtils.isEmpty(token) && token.startsWith(SecurityConstant.TOKEN_PREFIX)) {
@@ -74,6 +85,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 LOG.warn("Request to parse empty or null JWT : {} failed : {}", token, e.getMessage());
             }
         }
-        return null;
+        LOG.info("authenticated process failed.");
+        throw new UnauthenticatedException(new ExceptionModel("UNAUTHENTICATED",
+                HttpStatus.NON_AUTHORITATIVE_INFORMATION));
     }
 }

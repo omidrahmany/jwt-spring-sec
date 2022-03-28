@@ -8,9 +8,17 @@ import {HttpResponse} from "@angular/common/http";
   styleUrls: ['./private-zone.component.css']
 })
 export class PrivateZoneComponent implements OnInit {
-  get response() {
-    return this._response;
+  get errMsg(): string {
+    return this._errMsg;
   }
+
+  set errMsg(value: string) {
+    this._errMsg = value;
+  }
+  get responseObj() {
+    return this._responseObj;
+  }
+
   get errorObj(): Error {
     return this._errorObj;
   }
@@ -24,7 +32,8 @@ export class PrivateZoneComponent implements OnInit {
   private _isAllowedToShowPrivateContent: boolean;
   private _errorObj: Error;
   // @ts-ignore
-  private _response;
+  private _responseObj;
+  private _errMsg: string = '';
 
   get isErrMode(): boolean {
     return this._isErrMode;
@@ -50,11 +59,22 @@ export class PrivateZoneComponent implements OnInit {
     this.authService.showPrivateContent()
       .subscribe({
         next: value => {
-          this.isErrMode = false;
-          this.isAllowedToShowPrivateContent = true;
-          console.log('response: ');
-          console.log(value);
-          this._response = value;
+          if (value.headers.get("Exception-Code") === "UNAUTHENTICATED") {
+            this.isErrMode = true;
+            this.isAllowedToShowPrivateContent = false;
+            console.log('err response: ');
+            console.log(value);
+            if (value.headers.get("Exception-Code")) {
+              this._errMsg = <string>value.headers.get("Exception-Code");
+            }
+          } else {
+            this.isErrMode = false;
+            this.isAllowedToShowPrivateContent = true;
+            console.log('response: ');
+            console.log(value);
+          }
+          this._responseObj = value;
+
         },
         error: err => {
           this.isErrMode = true;
