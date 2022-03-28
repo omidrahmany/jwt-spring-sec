@@ -10,8 +10,9 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
 import { PrivateZoneComponent } from './private-zone/private-zone.component';
 import { PublicZoneComponent } from './public-zone/public-zone.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import {HttpRequestInterceptor} from "./interceptor/http-request.interceptor";
 
 @NgModule({
   declarations: [
@@ -27,7 +28,11 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
   imports: [
     BrowserModule, FormsModule, AppRoutingModule, HttpClientModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass:HttpRequestInterceptor,
+    multi:true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

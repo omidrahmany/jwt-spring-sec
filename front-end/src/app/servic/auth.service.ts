@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams, HttpResponse} from "@angular/common/http";
-import {sendMessageToMaster} from "@angular/compiler-cli/ngcc/src/execution/cluster/utils";
-import {stringify} from "@angular/compiler/src/util";
+import {HttpClient, HttpParams} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -34,13 +32,11 @@ export class AuthService {
   }
 
   showPrivateContent() {
-    let authorizationParam = new HttpParams();
-    authorizationParam = authorizationParam.append("authorization", this.secureToken);
     return this.http.get('http://localhost:8080/api/private', {
-      observe: 'response',
-      headers: {
+      observe: 'response'
+     /* headers: {
         authorization: this.secureToken
-      }
+      }*/
     })
   }
 
