@@ -1,4 +1,9 @@
 <div class="col-md-6">
+
+  <!--<app-error-alert (close)="onHandleError()"
+                   *ngIf="errMsg !== ''"
+                   [errorMessage]="errMsg"></app-error-alert>-->
+
   <form *ngIf="!isLoadingMode" #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
     <div class="form-group mt-4">
       <label for="username">Username</label>
@@ -19,6 +24,7 @@
     </div
     >
   </form>
+
   <div *ngIf="isLoadingMode" style="text-align: center">
     <app-loading-spinner></app-loading-spinner>
   </div>

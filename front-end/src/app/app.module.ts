@@ -13,6 +13,7 @@ import { PublicZoneComponent } from './public-zone/public-zone.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import {HttpRequestInterceptor} from "./interceptor/http-request.interceptor";
+import { ErrorAlertComponent } from './error-alert/error-alert.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {HttpRequestInterceptor} from "./interceptor/http-request.interceptor";
     HomeComponent,
     PrivateZoneComponent,
     PublicZoneComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    ErrorAlertComponent,
   ],
   imports: [
     BrowserModule, FormsModule, AppRoutingModule, HttpClientModule
